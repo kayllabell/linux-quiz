@@ -12,231 +12,311 @@
       --green-dim: #00aa2e;
       --text: #d9ffd9;
       --shadow: 0 0 15px rgba(0, 255, 65, 0.6);
+      --red: #ff4444;
+      --red-dim: #aa0000;
     }
-    body {
-      background: black;
-      color: var(--text);
-      font-family: "Courier New", monospace;
-      margin: 0;
-      overflow-x: hidden;
-    }
+    body { background: black; color: var(--text); font-family: "Courier New", monospace; margin: 0; overflow-x: hidden; }
     #bootLog {
-      position: absolute;
-      top: 20vh;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70%;
-      background: rgba(0, 0, 0, 0.85);
-      border: 1px solid var(--green);
-      padding: 20px;
-      color: var(--green);
-      font-size: 1.1rem;
-      box-shadow: var(--shadow);
-      border-radius: 8px;
-      opacity: 1;
-      transition: opacity 1.5s ease;
-      white-space: pre-line;
-      z-index: 10;
+      position: absolute; top: 20vh; left: 50%; transform: translateX(-50%);
+      width: 70%; background: rgba(0,0,0,0.85); border: 1px solid var(--green);
+      padding: 20px; color: var(--green); font-size: 1.1rem; box-shadow: var(--shadow);
+      border-radius: 8px; opacity: 1; transition: opacity 1.5s ease; white-space: pre-line; z-index: 10;
     }
+    #tally {
+      max-width: 800px; margin: 20px auto 0; display: none;
+      justify-content: space-between; align-items: center;
+      padding: 10px 20px; border: 1px solid var(--green-dim);
+      border-radius: 8px; background: rgba(0,20,0,0.6); font-size: 0.95rem;
+    }
+    #tally .correct-count { color: var(--green); }
+    #tally .wrong-count { color: var(--red); }
+    #tally .progress { color: #aaa; }
+    #progressBar { max-width: 800px; margin: 8px auto 0; display: none; height: 4px; background: #111; border-radius: 4px; overflow: hidden; }
+    #progressFill { height: 100%; background: var(--green); width: 0%; transition: width 0.4s ease; box-shadow: var(--shadow); }
     #quizContainer {
-      max-width: 800px;
-      margin: 40px auto;
-      background: var(--panel);
-      padding: 30px;
-      border: 1px solid var(--green);
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      display: none;
+      max-width: 800px; margin: 12px auto 40px; background: var(--panel);
+      padding: 30px; border: 1px solid var(--green); border-radius: 10px;
+      box-shadow: var(--shadow); display: none;
     }
-    .question {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      color: var(--green);
-      text-shadow: var(--shadow);
-    }
+    .question { font-size: 1.3rem; margin-bottom: 20px; color: var(--green); text-shadow: var(--shadow); line-height: 1.5; }
     .options label {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      background: rgba(0, 255, 65, 0.05);
-      border-left: 3px solid var(--green-dim);
-      cursor: pointer;
-      transition: 0.2s;
+      display: block; margin: 10px 0; padding: 12px 15px;
+      background: rgba(0,255,65,0.05); border-left: 3px solid var(--green-dim);
+      cursor: pointer; transition: background 0.2s; border-radius: 3px;
     }
-    .options label:hover {
-      background: rgba(0, 255, 65, 0.15);
-    }
+    .options label:hover { background: rgba(0,255,65,0.12); }
+    .options label.correct { background: rgba(0,255,65,0.2); border-left: 3px solid var(--green); color: var(--green); font-weight: bold; }
+    .options label.wrong { background: rgba(255,68,68,0.2); border-left: 3px solid var(--red); color: var(--red); }
+    .options label.reveal { background: rgba(0,255,65,0.15); border-left: 3px solid var(--green); color: var(--green); }
     button {
-      background: var(--green);
-      border: none;
-      padding: 12px 25px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      color: black;
-      font-weight: bold;
-      border-radius: 5px;
-      margin-top: 15px;
-      box-shadow: var(--shadow);
+      background: var(--green); border: none; padding: 12px 25px; font-size: 1rem;
+      cursor: pointer; color: black; font-weight: bold; border-radius: 5px;
+      margin-top: 15px; box-shadow: var(--shadow); font-family: "Courier New", monospace;
     }
-    button:hover {
-      background: var(--green-dim);
-      color: white;
-    }
-    #explanation {
-      margin-top: 20px;
-      padding: 15px;
-      border-left: 4px solid var(--green);
-      background: rgba(0, 255, 65, 0.1);
-      display: none;
-    }
-    #resultScreen {
-      text-align: center;
-      padding-top: 10vh;
-      display: none;
-    }
-    .score {
-      font-size: 2rem;
-      color: var(--green);
-      text-shadow: var(--shadow);
-    }
+    button:hover { background: var(--green-dim); color: white; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #explanation { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; font-size: 0.95rem; line-height: 1.6; }
+    #explanation.correct-exp { border-left: 4px solid var(--green); background: rgba(0,255,65,0.08); color: var(--green); }
+    #explanation.wrong-exp { border-left: 4px solid var(--red); background: rgba(255,68,68,0.08); color: #ffaaaa; }
+    #resultScreen { text-align: center; padding-top: 10vh; display: none; }
+    .score { font-size: 2.5rem; color: var(--green); text-shadow: var(--shadow); }
+    .score-sub { color: #aaa; font-size: 1rem; margin-top: 10px; }
+    .score-breakdown { margin: 20px auto; display: inline-flex; gap: 40px; padding: 15px 30px; border: 1px solid var(--green-dim); border-radius: 8px; }
+    .score-breakdown .correct-count { color: var(--green); font-size: 1.2rem; }
+    .score-breakdown .wrong-count { color: var(--red); font-size: 1.2rem; }
   </style>
 </head>
 <body>
 
 <div id="bootLog">[BOOT] Starting system...
-[BOOT] Fetching question modules...
-[ERROR] Question 17 attempted to escape containment. Reinforcing firewall...
+[BOOT] Loading 100 question modules...
+[ERROR] Question 42 attempted to escape containment. Reinforcing firewall...
 [WARNING] AI-generated content detected.
-[WARNING] If something is wrong, please direct all complaints to /dev/null.
+[WARNING] Direct all complaints to /dev/null.
 [INFO] Attempting to appear confident...
 [INFO] Confidence.exe has stopped responding.
 [BOOT] Linux Midterm 2026 loading...</div>
 
+<div id="tally">
+  <span class="correct-count">✔ Correct: <span id="tallyCorrect">0</span></span>
+  <span class="progress">Question <span id="tallyIndex">1</span> of <span id="tallyTotal">0</span></span>
+  <span class="wrong-count">✘ Wrong: <span id="tallyWrong">0</span></span>
+</div>
+<div id="progressBar"><div id="progressFill"></div></div>
+
 <div id="quizContainer">
   <div class="question" id="questionText"></div>
   <div class="options" id="options"></div>
-  <input type="text" id="shortAnswer" placeholder="Type your answer..." style="display:none; background:#000; color:var(--green); border:1px solid var(--green); padding:10px; width:100%; font-family:monospace; font-size:1rem;"/>
-  <br/>
-  <button onclick="submitAnswer()">Submit</button>
+  <button id="submitBtn" onclick="submitAnswer()">Submit</button>
+  <button id="nextBtn" onclick="nextQuestion()" style="display:none; background:#4B0082; margin-left:10px;">Next Question →</button>
   <div id="explanation"></div>
 </div>
 
 <div id="resultScreen">
   <p class="score" id="finalScore"></p>
-  <p>System: Quiz complete. You have survived… for now.</p>
-  <button onclick="location.reload()">Restart</button>
+  <p class="score-sub">System: Quiz complete. You have survived… for now.</p>
+  <div class="score-breakdown">
+    <span class="correct-count">✔ Correct: <span id="finalCorrect">0</span></span>
+    <span class="wrong-count">✘ Wrong: <span id="finalWrong">0</span></span>
+  </div>
+  <br/><br/>
+  <button onclick="location.reload()">↺ Restart</button>
 </div>
 
 <script>
-  let questions = [
-    {q:"Which command schedules a one-time job at a specific time?",type:"multiple-choice",a:["at"],options:["at","cron","sleep","bg"],explanation:"`at` schedules a job at a specific time."},
-    {q:"Which command runs a job immediately using the at scheduler?",type:"multiple-choice",a:["at now"],options:["at now","cron now","bg","fg"],explanation:"`at now` executes immediately using `at`."},
-    {q:"Which daemon processes at jobs?",type:"multiple-choice",a:["atd"],options:["atd","cron","systemd","rsyslogd"],explanation:"`atd` daemon handles `at` jobs."},
-    {q:"Which command removes a scheduled at job?",type:"multiple-choice",a:["atrm"],options:["atrm","atq","rm","kill"],explanation:"`atrm` removes scheduled `at` jobs."},
-    {q:"Which command lists pending at jobs?",type:"multiple-choice",a:["atq"],options:["atq","atd","cron","jobs"],explanation:"`atq` lists pending `at` jobs."},
-    {q:"Which command is used for pattern scanning and processing?",type:"multiple-choice",a:["awk"],options:["awk","sed","grep","cat"],explanation:"`awk` is for pattern scanning and text processing."},
-    {q:"Which command resumes a suspended job in the background?",type:"multiple-choice",a:["bg"],options:["bg","fg","jobs","kill"],explanation:"`bg` resumes a suspended job in the background."},
-    {q:"Which command decompresses .bz2 files?",type:"multiple-choice",a:["bunzip2"],options:["bunzip2","bzip2","gzip","gunzip"],explanation:"`bunzip2` decompresses `.bz2` files."},
-    {q:"Which command compresses files using the bzip2 algorithm?",type:"multiple-choice",a:["bzip2"],options:["bzip2","bunzip2","gzip","gunzip"],explanation:"`bzip2` compresses files using bzip2."},
-    {q:"Which command displays file contents?",type:"multiple-choice",a:["cat"],options:["cat","less","more","head"],explanation:"`cat` outputs file contents."},
-    {q:"The command `cd` changes the current directory.",type:"true-false",a:["True"],options:["True","False"],explanation:"`cd` is used to change directories."},
-    {q:"Which command modifies password aging settings?",type:"multiple-choice",a:["chage"],options:["chage","passwd","usermod","chown"],explanation:"`chage` modifies password expiration."},
-    {q:"Which command changes a file's group ownership?",type:"multiple-choice",a:["chgrp"],options:["chgrp","chown","chmod","grpadd"],explanation:"`chgrp` changes the group ownership."},
-    {q:"Which command changes file permissions?",type:"multiple-choice",a:["chmod"],options:["chmod","chown","chgrp","umask"],explanation:"`chmod` changes permissions."},
-    {q:"Which command changes file ownership?",type:"multiple-choice",a:["chown"],options:["chown","chgrp","chmod","usermod"],explanation:"`chown` changes file ownership."},
-    {q:"The daemon crond runs scheduled cron jobs.",type:"true-false",a:["True"],options:["True","False"],explanation:"`crond` runs cron jobs as scheduled."},
-    {q:"Which command edits a user's cron table?",type:"multiple-choice",a:["crontab"],options:["crontab","cronedit","vim /etc/cron","at"],explanation:"`crontab -e` edits cron jobs for a user."},
-    {q:"Which daemon synchronizes system time?",type:"multiple-choice",a:["chronyd"],options:["chronyd","ntpd","systemd","timed"],explanation:"`chronyd` keeps system time synchronized."},
-    {q:"Which command displays or sets the system date/time?",type:"multiple-choice",a:["date"],options:["date","time","timedatectl","clock"],explanation:"`date` shows or sets system date/time."},
-    {q:"Which command shows disk space usage?",type:"multiple-choice",a:["df"],options:["df","du","lsblk","fdisk"],explanation:"`df` shows disk space usage for mounted filesystems."},
-    {q:"Which command queries DNS servers?",type:"multiple-choice",a:["dig"],options:["dig","host","nslookup","ping"],explanation:"`dig` queries DNS records."},
-    {q:"The command `sudo` runs commands as root.",type:"true-false",a:["True"],options:["True","False"],explanation:"`sudo` executes commands with root privileges."},
-    {q:"Which command lists directory contents?",type:"multiple-choice",a:["ls"],options:["ls","dir","tree","find"],explanation:"`ls` lists files and directories."},
-    {q:"Which command searches text patterns in files?",type:"multiple-choice",a:["grep"],options:["grep","awk","sed","find"],explanation:"`grep` searches text patterns."},
-    {q:"The `top` command shows system resource usage in real time.",type:"true-false",a:["True"],options:["True","False"],explanation:"`top` displays running processes and resource usage."},
-    {q:"Which command displays the current working directory?",type:"multiple-choice",a:["pwd"],options:["pwd","cd","ls","whoami"],explanation:"`pwd` prints current working directory."},
-    {q:"Which command safely edits sudoers?",type:"multiple-choice",a:["visudo"],options:["visudo","nano /etc/sudoers","sudoedit","vim /etc/sudoers"],explanation:"Always use `visudo` to safely edit sudoers."},
-    {q:"The root directory is represented by `/`.",type:"true-false",a:["True"],options:["True","False"],explanation:"`/` is the root of the filesystem."},
-    {q:"Which directory contains user home directories?",type:"multiple-choice",a:["/home"],options:["/home","/root","/usr","/var"],explanation:"User homes are stored in `/home`."},
-    {q:"Which directory contains bootloader files?",type:"multiple-choice",a:["/boot"],options:["/boot","/bin","/usr","/etc"],explanation:"`/boot` contains bootloader and kernel files."},
-    {q:"Which directory stores temporary mounts?",type:"multiple-choice",a:["/mnt"],options:["/mnt","/media","/tmp","/var"],explanation:"Temporary mounts often go in `/mnt`."},
-    {q:"Which command prints text to the terminal?",type:"multiple-choice",a:["echo"],options:["echo","print","cat","write"],explanation:"`echo` prints text to terminal."},
-    {q:"Which command decompresses .gz files?",type:"multiple-choice",a:["gunzip"],options:["gunzip","gzip","bunzip2","tar"],explanation:"`gunzip` decompresses `.gz` files."},
-    {q:"Which command compresses files using gzip?",type:"multiple-choice",a:["gzip"],options:["gzip","gunzip","bzip2","tar"],explanation:"`gzip` compresses files."},
-    {q:"Which command shows who is logged in?",type:"multiple-choice",a:["w"],options:["w","who","users","id"],explanation:"`w` shows logged in users."},
-    {q:"Which command creates a new user?",type:"multiple-choice",a:["useradd"],options:["useradd","adduser","usermod","passwd"],explanation:"`useradd` creates a new user account."},
-    {q:"The command `rm -rf /` is safe to run on your system.",type:"true-false",a:["False"],options:["True","False"],explanation:"Never run `rm -rf /` — it destroys everything. 💀"},
-    {q:"Which command shows system uptime?",type:"multiple-choice",a:["uptime"],options:["uptime","time","top","date"],explanation:"`uptime` shows how long the system has been running."},
-    {q:"Which command shows IP addresses?",type:"multiple-choice",a:["ip addr"],options:["ip addr","ifconfig","ip link","netstat"],explanation:"`ip addr` lists network interfaces and addresses."},
-    {q:"Which command connects to a remote system via SSH?",type:"multiple-choice",a:["ssh"],options:["ssh","telnet","rlogin","scp"],explanation:"`ssh` connects to remote systems securely."},
-    {q:"Which command transfers files securely?",type:"multiple-choice",a:["sftp"],options:["sftp","scp","ftp","rsync"],explanation:"`sftp` securely transfers files."}
-  ];
+const questions = [
+  // SCHEDULING
+  {q:"Which command schedules a one-time job at a specific time?",type:"multiple-choice",a:["at"],options:["at","cron","sleep","bg"],explanation:"✔ Correct — `at` schedules a one-time job at a specific time."},
+  {q:"Which command runs a job immediately using the at scheduler?",type:"multiple-choice",a:["at now"],options:["at now","cron now","bg","fg"],explanation:"✔ Correct — `at now` executes a job immediately via the at scheduler."},
+  {q:"Which daemon processes at jobs?",type:"multiple-choice",a:["atd"],options:["atd","crond","systemd","rsyslogd"],explanation:"✔ Correct — `atd` is the daemon that handles `at` jobs."},
+  {q:"Which command removes a scheduled at job?",type:"multiple-choice",a:["atrm"],options:["atrm","atq","rm","kill"],explanation:"✔ Correct — `atrm` removes scheduled `at` jobs."},
+  {q:"Which command lists pending at jobs?",type:"multiple-choice",a:["atq"],options:["atq","atd","cron","jobs"],explanation:"✔ Correct — `atq` lists pending `at` jobs."},
+  {q:"Which command edits a user's cron table?",type:"multiple-choice",a:["crontab"],options:["crontab","cronedit","vim /etc/cron","at"],explanation:"✔ Correct — `crontab -e` edits the current user's cron jobs."},
+  {q:"The daemon crond runs scheduled cron jobs.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — `crond` processes all scheduled cron jobs."},
+  {q:"In a crontab entry, what does the first field represent?",type:"multiple-choice",a:["Minute"],options:["Minute","Hour","Day of month","Month"],explanation:"✔ Correct — crontab fields go: minute, hour, day, month, weekday."},
+  {q:"Which crontab entry runs a job every day at midnight?",type:"multiple-choice",a:["0 0 * * *"],options:["0 0 * * *","* * * * *","0 * * * *","* 0 * * *"],explanation:"✔ Correct — `0 0 * * *` means minute 0, hour 0 (midnight), every day."},
+  {q:"Which daemon synchronizes system time?",type:"multiple-choice",a:["chronyd"],options:["chronyd","ntpd","systemd","timed"],explanation:"✔ Correct — `chronyd` keeps the system clock synchronized."},
 
-  let index = 0;
-  let score = 0;
+  // TEXT & FILE COMMANDS
+  {q:"Which command is used for pattern scanning and processing?",type:"multiple-choice",a:["awk"],options:["awk","sed","grep","cat"],explanation:"✔ Correct — `awk` is a powerful tool for pattern scanning and text processing."},
+  {q:"Which command displays file contents?",type:"multiple-choice",a:["cat"],options:["cat","less","more","head"],explanation:"✔ Correct — `cat` outputs file contents to the terminal."},
+  {q:"Which command searches text patterns in files?",type:"multiple-choice",a:["grep"],options:["grep","awk","sed","find"],explanation:"✔ Correct — `grep` searches for patterns in files."},
+  {q:"Which command prints text to the terminal?",type:"multiple-choice",a:["echo"],options:["echo","print","cat","write"],explanation:"✔ Correct — `echo` prints text to the terminal."},
+  {q:"Which command shows the first 10 lines of a file?",type:"multiple-choice",a:["head"],options:["head","tail","cat","less"],explanation:"✔ Correct — `head` shows the first 10 lines by default."},
+  {q:"Which command shows the last 10 lines of a file?",type:"multiple-choice",a:["tail"],options:["tail","head","cat","more"],explanation:"✔ Correct — `tail` shows the last 10 lines by default."},
+  {q:"Which command performs stream editing (find and replace) on text?",type:"multiple-choice",a:["sed"],options:["sed","awk","grep","tr"],explanation:"✔ Correct — `sed` is a stream editor used for substitution and text manipulation."},
+  {q:"Which command counts lines, words, and characters in a file?",type:"multiple-choice",a:["wc"],options:["wc","count","awk","grep"],explanation:"✔ Correct — `wc` (word count) counts lines, words, and bytes."},
+  {q:"Which command sorts lines in a file alphabetically?",type:"multiple-choice",a:["sort"],options:["sort","order","awk","grep"],explanation:"✔ Correct — `sort` sorts lines of text alphabetically or numerically."},
+  {q:"Which command removes duplicate lines from sorted input?",type:"multiple-choice",a:["uniq"],options:["uniq","sort","dedup","cut"],explanation:"✔ Correct — `uniq` filters out adjacent duplicate lines."},
 
-  function startQuiz() {
-    document.getElementById("quizContainer").style.display = "block";
-    loadQuestion();
+  // FILE SYSTEM & NAVIGATION
+  {q:"The command `cd` changes the current directory.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — `cd` is the change directory command."},
+  {q:"Which command lists directory contents?",type:"multiple-choice",a:["ls"],options:["ls","dir","tree","find"],explanation:"✔ Correct — `ls` lists files and directories."},
+  {q:"Which command displays the current working directory?",type:"multiple-choice",a:["pwd"],options:["pwd","cd","ls","whoami"],explanation:"✔ Correct — `pwd` prints the current working directory."},
+  {q:"Which command creates a new directory?",type:"multiple-choice",a:["mkdir"],options:["mkdir","mkfile","touch","newdir"],explanation:"✔ Correct — `mkdir` creates a new directory."},
+  {q:"Which command removes an empty directory?",type:"multiple-choice",a:["rmdir"],options:["rmdir","rm","delete","rm -r"],explanation:"✔ Correct — `rmdir` removes empty directories only."},
+  {q:"Which command copies files or directories?",type:"multiple-choice",a:["cp"],options:["cp","mv","copy","dd"],explanation:"✔ Correct — `cp` copies files and directories."},
+  {q:"Which command moves or renames files?",type:"multiple-choice",a:["mv"],options:["mv","cp","rename","rn"],explanation:"✔ Correct — `mv` moves or renames files."},
+  {q:"Which command deletes files?",type:"multiple-choice",a:["rm"],options:["rm","del","erase","rmdir"],explanation:"✔ Correct — `rm` removes files."},
+  {q:"Which command creates an empty file or updates a file's timestamp?",type:"multiple-choice",a:["touch"],options:["touch","create","new","mkfile"],explanation:"✔ Correct — `touch` creates an empty file or updates timestamps."},
+  {q:"The command `rm -rf /` is safe to run on your system.",type:"true-false",a:["False"],options:["True","False"],explanation:"✘ Incorrect — `rm -rf /` recursively deletes everything. Never run it. 💀"},
+
+  // FILESYSTEM STRUCTURE
+  {q:"The root directory is represented by `/`.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — `/` is the top-level root of the Linux filesystem."},
+  {q:"Which directory contains user home directories?",type:"multiple-choice",a:["/home"],options:["/home","/root","/usr","/var"],explanation:"✔ Correct — regular user home directories live in `/home`."},
+  {q:"Which directory contains bootloader and kernel files?",type:"multiple-choice",a:["/boot"],options:["/boot","/bin","/usr","/etc"],explanation:"✔ Correct — `/boot` contains the bootloader and kernel."},
+  {q:"Which directory stores temporary mounts?",type:"multiple-choice",a:["/mnt"],options:["/mnt","/media","/tmp","/var"],explanation:"✔ Correct — `/mnt` is used for temporary manual mounts."},
+  {q:"Which directory contains system configuration files?",type:"multiple-choice",a:["/etc"],options:["/etc","/var","/usr","/sys"],explanation:"✔ Correct — `/etc` holds system-wide configuration files."},
+  {q:"Which directory contains temporary files cleared on reboot?",type:"multiple-choice",a:["/tmp"],options:["/tmp","/var","/mnt","/run"],explanation:"✔ Correct — `/tmp` stores temporary files that don't persist across reboots."},
+  {q:"Which directory contains log files?",type:"multiple-choice",a:["/var/log"],options:["/var/log","/etc/log","/log","/tmp/log"],explanation:"✔ Correct — system logs are stored in `/var/log`."},
+  {q:"Which directory contains essential user binaries like `ls` and `cp`?",type:"multiple-choice",a:["/bin"],options:["/bin","/sbin","/usr/bin","/etc/bin"],explanation:"✔ Correct — `/bin` holds essential binaries available to all users."},
+  {q:"Which directory contains system administration binaries like `fdisk`?",type:"multiple-choice",a:["/sbin"],options:["/sbin","/bin","/usr/sbin","/etc"],explanation:"✔ Correct — `/sbin` contains system/admin binaries typically run as root."},
+  {q:"Which directory contains device files?",type:"multiple-choice",a:["/dev"],options:["/dev","/sys","/proc","/etc"],explanation:"✔ Correct — `/dev` contains device files like `/dev/sda`."},
+
+  // PERMISSIONS
+  {q:"Which command changes file permissions?",type:"multiple-choice",a:["chmod"],options:["chmod","chown","chgrp","umask"],explanation:"✔ Correct — `chmod` changes file permissions."},
+  {q:"Which command changes file ownership?",type:"multiple-choice",a:["chown"],options:["chown","chgrp","chmod","usermod"],explanation:"✔ Correct — `chown` changes the owner of a file."},
+  {q:"Which command changes a file's group ownership?",type:"multiple-choice",a:["chgrp"],options:["chgrp","chown","chmod","grpadd"],explanation:"✔ Correct — `chgrp` changes the group associated with a file."},
+  {q:"What does `chmod 755` give the owner of a file?",type:"multiple-choice",a:["Read, write, and execute"],options:["Read, write, and execute","Read and write only","Read and execute only","Full root access"],explanation:"✔ Correct — 7 = read(4) + write(2) + execute(1) for the owner."},
+  {q:"What does the permission `-rwxr-xr-x` mean for group members?",type:"multiple-choice",a:["Read and execute"],options:["Read and execute","Read, write, execute","Write only","No access"],explanation:"✔ Correct — `r-x` means read and execute, no write for group."},
+  {q:"Which octal value represents read-only permission?",type:"multiple-choice",a:["4"],options:["4","2","1","7"],explanation:"✔ Correct — read = 4, write = 2, execute = 1."},
+  {q:"Which command sets the default permission mask for new files?",type:"multiple-choice",a:["umask"],options:["umask","chmod","chown","mask"],explanation:"✔ Correct — `umask` defines default permissions subtracted from new files."},
+  {q:"The sticky bit on a directory prevents users from deleting other users' files.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — the sticky bit restricts file deletion to the owner only."},
+  {q:"Which command finds files with the SUID bit set?",type:"multiple-choice",a:["find / -perm -4000"],options:["find / -perm -4000","ls -suid /","chmod -suid","locate suid"],explanation:"✔ Correct — `find / -perm -4000` locates SUID files."},
+  {q:"What does SUID stand for?",type:"multiple-choice",a:["Set User ID"],options:["Set User ID","Super User ID","Secure Unix ID","System User Identity"],explanation:"✔ Correct — SUID means Set User ID, allowing execution as the file owner."},
+
+  // USER MANAGEMENT
+  {q:"Which command creates a new user?",type:"multiple-choice",a:["useradd"],options:["useradd","adduser","usermod","passwd"],explanation:"✔ Correct — `useradd` creates a new user account."},
+  {q:"Which command deletes a user account?",type:"multiple-choice",a:["userdel"],options:["userdel","usermod","rmuser","deluser"],explanation:"✔ Correct — `userdel` removes a user account."},
+  {q:"Which command modifies an existing user account?",type:"multiple-choice",a:["usermod"],options:["usermod","useradd","chuser","edituser"],explanation:"✔ Correct — `usermod` modifies user account properties."},
+  {q:"Which command changes a user's password?",type:"multiple-choice",a:["passwd"],options:["passwd","chpass","usermod","shadow"],explanation:"✔ Correct — `passwd` sets or changes a user's password."},
+  {q:"Which command modifies password aging settings?",type:"multiple-choice",a:["chage"],options:["chage","passwd","usermod","chown"],explanation:"✔ Correct — `chage` controls password expiration policies."},
+  {q:"Which file stores user account information?",type:"multiple-choice",a:["/etc/passwd"],options:["/etc/passwd","/etc/shadow","/etc/users","/etc/accounts"],explanation:"✔ Correct — `/etc/passwd` stores basic user account info."},
+  {q:"Which file stores encrypted user passwords?",type:"multiple-choice",a:["/etc/shadow"],options:["/etc/shadow","/etc/passwd","/etc/secure","/etc/crypt"],explanation:"✔ Correct — `/etc/shadow` stores hashed passwords with expiry info."},
+  {q:"Which command adds a user to a group?",type:"multiple-choice",a:["usermod -aG"],options:["usermod -aG","groupadd","addgroup","chgrp"],explanation:"✔ Correct — `usermod -aG groupname username` adds a user to a group."},
+  {q:"Which command safely edits the sudoers file?",type:"multiple-choice",a:["visudo"],options:["visudo","nano /etc/sudoers","sudo edit","vim /etc/sudoers"],explanation:"✔ Correct — always use `visudo` to safely edit the sudoers file."},
+  {q:"The command `sudo` runs commands as root.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — `sudo` executes commands with root (or another user's) privileges."},
+
+  // PROCESSES & JOBS
+  {q:"Which command resumes a suspended job in the background?",type:"multiple-choice",a:["bg"],options:["bg","fg","jobs","kill"],explanation:"✔ Correct — `bg` resumes a stopped job in the background."},
+  {q:"Which command brings a background job to the foreground?",type:"multiple-choice",a:["fg"],options:["fg","bg","jobs","top"],explanation:"✔ Correct — `fg` brings a background process to the foreground."},
+  {q:"Which command lists current shell jobs?",type:"multiple-choice",a:["jobs"],options:["jobs","ps","top","bg"],explanation:"✔ Correct — `jobs` lists active jobs in the current shell session."},
+  {q:"Which command shows all running processes?",type:"multiple-choice",a:["ps aux"],options:["ps aux","top","jobs","pstree"],explanation:"✔ Correct — `ps aux` shows all processes from all users."},
+  {q:"The `top` command shows system resource usage in real time.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — `top` displays live process and resource usage."},
+  {q:"Which command sends a signal to terminate a process by PID?",type:"multiple-choice",a:["kill"],options:["kill","stop","end","terminate"],explanation:"✔ Correct — `kill PID` sends a termination signal to a process."},
+  {q:"Which command kills a process by name?",type:"multiple-choice",a:["killall"],options:["killall","kill","pkill","stop"],explanation:"✔ Correct — `killall processname` terminates all processes with that name."},
+  {q:"Which signal number forcefully kills a process?",type:"multiple-choice",a:["9"],options:["9","15","1","2"],explanation:"✔ Correct — signal 9 (SIGKILL) forcefully terminates a process immediately."},
+  {q:"Which command shows system uptime?",type:"multiple-choice",a:["uptime"],options:["uptime","time","top","date"],explanation:"✔ Correct — `uptime` shows how long the system has been running."},
+  {q:"Which command runs a process immune to hangups?",type:"multiple-choice",a:["nohup"],options:["nohup","bg","disown","screen"],explanation:"✔ Correct — `nohup` runs a command that keeps going after logout."},
+
+  // NETWORKING
+  {q:"Which command shows IP addresses?",type:"multiple-choice",a:["ip addr"],options:["ip addr","ifconfig","ip link","netstat"],explanation:"✔ Correct — `ip addr` lists all network interfaces and their IP addresses."},
+  {q:"Which command queries DNS servers?",type:"multiple-choice",a:["dig"],options:["dig","host","nslookup","ping"],explanation:"✔ Correct — `dig` queries DNS records in detail."},
+  {q:"Which command connects to a remote system via SSH?",type:"multiple-choice",a:["ssh"],options:["ssh","telnet","rlogin","scp"],explanation:"✔ Correct — `ssh` provides secure encrypted remote login."},
+  {q:"Which command transfers files securely using SSH?",type:"multiple-choice",a:["sftp"],options:["sftp","scp","ftp","rsync"],explanation:"✔ Correct — `sftp` is a secure file transfer protocol over SSH."},
+  {q:"Which command copies files securely between hosts?",type:"multiple-choice",a:["scp"],options:["scp","sftp","rsync","ftp"],explanation:"✔ Correct — `scp` uses SSH to copy files between systems."},
+  {q:"Which command tests network connectivity to a host?",type:"multiple-choice",a:["ping"],options:["ping","traceroute","dig","curl"],explanation:"✔ Correct — `ping` sends ICMP echo requests to test connectivity."},
+  {q:"Which command shows the route packets take to a destination?",type:"multiple-choice",a:["traceroute"],options:["traceroute","ping","route","dig"],explanation:"✔ Correct — `traceroute` shows each hop packets take to reach a destination."},
+  {q:"Which command displays active network connections?",type:"multiple-choice",a:["ss"],options:["ss","netstat","ip addr","ifconfig"],explanation:"✔ Correct — `ss` (socket statistics) shows active network connections."},
+  {q:"Which command displays or sets the system date and time?",type:"multiple-choice",a:["date"],options:["date","time","timedatectl","clock"],explanation:"✔ Correct — `date` shows or sets the system date and time."},
+  {q:"Which file defines static hostname-to-IP mappings?",type:"multiple-choice",a:["/etc/hosts"],options:["/etc/hosts","/etc/dns","/etc/resolv.conf","/etc/hostname"],explanation:"✔ Correct — `/etc/hosts` maps hostnames to IP addresses locally."},
+
+  // COMPRESSION & ARCHIVING
+  {q:"Which command decompresses .bz2 files?",type:"multiple-choice",a:["bunzip2"],options:["bunzip2","bzip2","gzip","gunzip"],explanation:"✔ Correct — `bunzip2` decompresses `.bz2` compressed files."},
+  {q:"Which command compresses files using the bzip2 algorithm?",type:"multiple-choice",a:["bzip2"],options:["bzip2","bunzip2","gzip","gunzip"],explanation:"✔ Correct — `bzip2` compresses files using the bzip2 algorithm."},
+  {q:"Which command decompresses .gz files?",type:"multiple-choice",a:["gunzip"],options:["gunzip","gzip","bunzip2","tar"],explanation:"✔ Correct — `gunzip` decompresses `.gz` files."},
+  {q:"Which command compresses files using gzip?",type:"multiple-choice",a:["gzip"],options:["gzip","gunzip","bzip2","tar"],explanation:"✔ Correct — `gzip` compresses files using the gzip algorithm."},
+  {q:"Which command creates or extracts tar archives?",type:"multiple-choice",a:["tar"],options:["tar","zip","gzip","ar"],explanation:"✔ Correct — `tar` archives files (and can compress with -z or -j flags)."},
+  {q:"Which flag extracts a tar archive?",type:"multiple-choice",a:["-x"],options:["-x","-c","-t","-v"],explanation:"✔ Correct — `tar -x` extracts files from an archive."},
+  {q:"Which flag creates a tar archive?",type:"multiple-choice",a:["-c"],options:["-c","-x","-t","-r"],explanation:"✔ Correct — `tar -c` creates a new archive."},
+
+  // DISK & STORAGE
+  {q:"Which command shows disk space usage?",type:"multiple-choice",a:["df"],options:["df","du","lsblk","fdisk"],explanation:"✔ Correct — `df` shows disk space usage for mounted filesystems."},
+  {q:"Which command shows disk usage of files and directories?",type:"multiple-choice",a:["du"],options:["du","df","ls","lsblk"],explanation:"✔ Correct — `du` shows disk space used by files and directories."},
+  {q:"Which command lists block devices?",type:"multiple-choice",a:["lsblk"],options:["lsblk","fdisk","df","mount"],explanation:"✔ Correct — `lsblk` lists block devices in a tree format."},
+  {q:"Which command mounts a filesystem?",type:"multiple-choice",a:["mount"],options:["mount","attach","lsblk","fdisk"],explanation:"✔ Correct — `mount` attaches a filesystem to the directory tree."},
+  {q:"Which file defines filesystems to mount at boot?",type:"multiple-choice",a:["/etc/fstab"],options:["/etc/fstab","/etc/mount","/etc/disks","/boot/fstab"],explanation:"✔ Correct — `/etc/fstab` defines persistent mounts loaded at boot."},
+
+  // SYSTEM & MISC
+  {q:"Which command shows who is logged in?",type:"multiple-choice",a:["w"],options:["w","who","users","id"],explanation:"✔ Correct — `w` shows who is logged in and what they are doing."},
+  {q:"Which command shows the current logged-in username?",type:"multiple-choice",a:["whoami"],options:["whoami","id","who","w"],explanation:"✔ Correct — `whoami` prints the current effective username."},
+  {q:"Which command shows system information including kernel version?",type:"multiple-choice",a:["uname -a"],options:["uname -a","sysinfo","hostname","lsb_release"],explanation:"✔ Correct — `uname -a` shows all system info including kernel version."},
+  {q:"Which command displays the hostname of the system?",type:"multiple-choice",a:["hostname"],options:["hostname","uname","whoami","sysname"],explanation:"✔ Correct — `hostname` prints or sets the system hostname."},
+  {q:"Which command clears the terminal screen?",type:"multiple-choice",a:["clear"],options:["clear","cls","reset","flush"],explanation:"✔ Correct — `clear` clears the terminal screen."},
+  {q:"Which command shows the manual page for a command?",type:"multiple-choice",a:["man"],options:["man","help","info","--help"],explanation:"✔ Correct — `man command` shows the manual (documentation) for that command."},
+  {q:"Which command finds files by name on the system?",type:"multiple-choice",a:["find"],options:["find","locate","search","grep"],explanation:"✔ Correct — `find` searches for files based on name, size, permissions, and more."},
+  {q:"Which command shows command history?",type:"multiple-choice",a:["history"],options:["history","log","past","recall"],explanation:"✔ Correct — `history` shows previously run commands in the current shell."},
+  {q:"Which symbol redirects output to a file, overwriting it?",type:"multiple-choice",a:[">"],options:[">",">>","|","<"],explanation:"✔ Correct — `>` redirects stdout to a file, overwriting existing content."},
+  {q:"Which symbol appends output to a file without overwriting?",type:"multiple-choice",a:[">>"],options:[">>",">","|","<"],explanation:"✔ Correct — `>>` appends stdout to a file."},
+  {q:"Which symbol pipes output from one command to another?",type:"multiple-choice",a:["|"],options:["|",">",">>","&"],explanation:"✔ Correct — `|` sends the output of one command as input to another."},
+  {q:"Which command shows environment variables?",type:"multiple-choice",a:["env"],options:["env","printenv","vars","set"],explanation:"✔ Correct — `env` displays all current environment variables."},
+  {q:"Which command displays the exit status of the last command?",type:"multiple-choice",a:["echo $?"],options:["echo $?","status","exit","$status"],explanation:"✔ Correct — `echo $?` prints the exit code of the last run command."},
+  {q:"A return code of 0 means the last command succeeded.",type:"true-false",a:["True"],options:["True","False"],explanation:"✔ Correct — exit code 0 means success; anything else means an error."},
+  {q:"Which command locates the binary path of a command?",type:"multiple-choice",a:["which"],options:["which","find","locate","whereis"],explanation:"✔ Correct — `which` shows the full path of a command's binary."}
+];
+
+let index = 0, score = 0, wrong = 0;
+
+function startQuiz() {
+  document.getElementById("tally").style.display = "flex";
+  document.getElementById("progressBar").style.display = "block";
+  document.getElementById("quizContainer").style.display = "block";
+  document.getElementById("tallyTotal").innerText = questions.length;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = questions[index];
+  document.getElementById("questionText").innerText = `Q${index + 1}. ${q.q}`;
+  document.getElementById("tallyIndex").innerText = index + 1;
+  document.getElementById("progressFill").style.width = `${(index / questions.length) * 100}%`;
+  document.getElementById("explanation").style.display = "none";
+  document.getElementById("explanation").className = "";
+  document.getElementById("submitBtn").disabled = false;
+
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach(opt => {
+    optionsDiv.innerHTML += `<label><input type="radio" name="answer" value="${opt}"> ${opt}</label>`;
+  });
+  document.getElementById("nextBtn").style.display = "none";
+}
+
+function submitAnswer() {
+  const q = questions[index];
+  const selected = document.querySelector("input[name='answer']:checked");
+  if (!selected) return alert("Select an answer first!");
+
+  document.getElementById("submitBtn").disabled = true;
+  const userAnswer = selected.value;
+  const isCorrect = q.a.includes(userAnswer);
+
+  if (isCorrect) {
+    score++;
+    document.getElementById("tallyCorrect").innerText = score;
+    selected.parentElement.classList.add("correct");
+  } else {
+    wrong++;
+    document.getElementById("tallyWrong").innerText = wrong;
+    selected.parentElement.classList.add("wrong");
+    // Reveal correct answer
+    document.querySelectorAll(".options label").forEach(label => {
+      const input = label.querySelector("input");
+      if (q.a.includes(input.value)) label.classList.add("reveal");
+    });
   }
 
-  function loadQuestion() {
-    const q = questions[index];
-    document.getElementById("questionText").innerText = q.q;
-    document.getElementById("explanation").style.display = "none";
-    const optionsDiv = document.getElementById("options");
-    const shortInput = document.getElementById("shortAnswer");
-    optionsDiv.innerHTML = "";
-    shortInput.style.display = "none";
+  const expBox = document.getElementById("explanation");
+  expBox.innerHTML = (isCorrect ? "✔ Correct! — " : "✘ Wrong! — ") + q.explanation.replace(/^[✔✘][^—]+— /, "");
+  expBox.className = isCorrect ? "correct-exp" : "wrong-exp";
+  expBox.style.display = "block";
 
-    if (q.type === "multiple-choice" || q.type === "true-false") {
-      q.options.forEach(opt => {
-        optionsDiv.innerHTML += `<label><input type="radio" name="answer" value="${opt}"> ${opt}</label>`;
-      });
-    }
-    if (q.type === "short-answer") {
-      shortInput.style.display = "block";
-    }
-  }
+  document.getElementById("nextBtn").style.display = "inline-block";
+}
 
-  function submitAnswer() {
-    const q = questions[index];
-    let userAnswer;
+function endQuiz() {
+  document.getElementById("tally").style.display = "none";
+  document.getElementById("progressBar").style.display = "none";
+  document.getElementById("quizContainer").style.display = "none";
+  document.getElementById("resultScreen").style.display = "block";
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById("finalScore").innerText = `${score} / ${questions.length} — ${pct}%`;
+  document.getElementById("finalCorrect").innerText = score;
+  document.getElementById("finalWrong").innerText = wrong;
+}
 
-    if (q.type === "short-answer") {
-      userAnswer = document.getElementById("shortAnswer").value.trim().toLowerCase();
-      if (userAnswer === q.a[0].toLowerCase()) score++;
-    } else {
-      const selected = document.querySelector("input[name='answer']:checked");
-      if (!selected) return alert("Select an answer first!");
-      userAnswer = selected.value;
-      if (q.a.includes(userAnswer)) score++;
-    }
+function nextQuestion() {
+  document.getElementById("nextBtn").style.display = "none";
+  index++;
+  if (index >= questions.length) return endQuiz();
+  loadQuestion();
+}
 
-    document.getElementById("explanation").innerHTML = q.explanation;
-    document.getElementById("explanation").style.display = "block";
-
-    setTimeout(() => {
-      index++;
-      if (index >= questions.length) return endQuiz();
-      loadQuestion();
-    }, 1200);
-  }
-
-  function endQuiz() {
-    document.getElementById("quizContainer").style.display = "none";
-    document.getElementById("resultScreen").style.display = "block";
-    document.getElementById("finalScore").innerText = `You scored ${score} / ${questions.length}`;
-  }
-
-  setTimeout(() => {
-    const boot = document.getElementById("bootLog");
-    boot.style.opacity = 0;
-    setTimeout(() => {
-      boot.style.display = "none";
-      startQuiz();
-    }, 1500);
-  }, 4000);
+setTimeout(() => {
+  const boot = document.getElementById("bootLog");
+  boot.style.opacity = 0;
+  setTimeout(() => { boot.style.display = "none"; startQuiz(); }, 1500);
+}, 4000);
 </script>
 </body>
 </html>
